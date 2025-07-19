@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#9C27B0">
+    <title>Planetary Calculator</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 16px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #9C27B0;
+        }
+        
+        .row {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .col {
+            flex: 1;
+        }
+        
+        .coord-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .coord-input input {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .coord-input span {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #9C27B0;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results {
+            margin-top: 24px;
+            display: none;
+        }
+        
+        .results h3 {
+            color: #9C27B0;
+            margin-bottom: 16px;
+            font-size: 18px;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .table th {
+            background: #f5f5f5;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .table td {
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 14px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            display: none;
+        }
+        
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            display: none;
+        }
+        
+        .location-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        
+        .location-btn:hover {
+            background: #45a049;
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+            
+            .content {
+                padding: 16px;
+            }
+            
+            .header {
+                padding: 16px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .row {
+                flex-direction: column;
+            }
+            
+            .coord-input {
+                flex-wrap: wrap;
+            }
+            
+            .table {
+                font-size: 12px;
+            }
+            
+            .table th,
+            .table td {
+                padding: 8px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌌 Planetary Calculator</h1>
+            <p>High-precision astrological calculations</p>
+        </div>
+        
+        <div class="content">
+            <div id="errorMessage" class="error"></div>
+            <div id="successMessage" class="success"></div>
+            
+            <form id="calculatorForm">
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="time">Time (UT)</label>
+                    <input type="time" id="time" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="longitude">Longitude</label>
+                    <div class="coord-input">
+                        <input type="number" id="lonDeg" class="form-control" placeholder="°" min="0" max="179" required>
+                        <span>°</span>
+                        <input type="number" id="lonMin" class="form-control" placeholder="'" min="0" max="59" required>
+                        <span>'</span>
+                        <input type="number" id="lonSec" class="form-control" placeholder="&quot;" min="0" max="59" required>
+                        <span>"</span>
+                        <select id="lonEW" class="form-control" style="width: 60px;">
+                            <option value="E">E</option>
+                            <option value="W">W</option>
+                        </select>
+                        <button type="button" class="location-btn" onclick="getCurrentLocation()">📍</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="latitude">Latitude</label>
+                    <div class="coord-input">
+                        <input type="number" id="latDeg" class="form-control" placeholder="°" min="0" max="89" required>
+                        <span>°</span>
+                        <input type="number" id="latMin" class="form-control" placeholder="'" min="0" max="59" required>
+                        <span>'</span>
+                        <input type="number" id="latSec" class="form-control" placeholder="&quot;" min="0" max="59" required>
+                        <span>"</span>
+                        <select id="latNS" class="form-control" style="width: 60px;">
+                            <option value="N">N</option>
+                            <option value="S">S</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="houseSystem">House System</label>
+                    <select id="houseSystem" class="form-control">
+                        <option value="P">Placidus</option>
+                        <option value="O">Porphyrius</option>
+                        <option value="E">Equal</option>
+                    </select>
+                </div>
+                
+                <button type="submit" id="calculateBtn" class="btn">Calculate Planetary Positions</button>
+            </form>
+            
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p id="loadingText">Initializing Swiss Ephemeris...</p>
+            </div>
+            
+            <div id="results" class="results">
+                <h3>📊 Calculation Results</h3>
+                <div id="resultsTable"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let moduleLoaded = false;
+        let loadingStartTime = Date.now();
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            setDefaultValues();
+            initializeCalculator();
+        });
+        
+        function setDefaultValues() {
+            const now = new Date();
+            document.getElementById('date').value = now.toISOString().split('T')[0];
+            document.getElementById('time').value = now.toTimeString().slice(0, 5);
+            
+            // Default to Milan, Italy
+            document.getElementById('lonDeg').value = '9';
+            document.getElementById('lonMin').value = '9';
+            document.getElementById('lonSec').value = '34';
+            document.getElementById('lonEW').value = 'E';
+            
+            document.getElementById('latDeg').value = '45';
+            document.getElementById('latMin').value = '27';
+            document.getElementById('latSec').value = '40';
+            document.getElementById('latNS').value = 'N';
+        }
+        
+        function initializeCalculator() {
+            showLoading('Initializing Swiss Ephemeris...');
+            
+            // Configure the Module
+            window.Module = {
+                locateFile: function(s) {
+                    return s;
+                },
+                
+                INITIAL_MEMORY: 16777216,
+                MAXIMUM_MEMORY: 268435456,
+                
+                print: function(text) {
+                    console.log('WASM:', text);
+                },
+                
+                printErr: function(text) {
+                    if (text && !text.includes('warning')) {
+                        console.error('WASM Error:', text);
+                    }
+                },
+                
+                onRuntimeInitialized: function() {
+                    const loadTime = Date.now() - loadingStartTime;
+                    console.log(`Swiss Ephemeris loaded in ${loadTime}ms!`);
+                    moduleLoaded = true;
+                    
+                    hideLoading();
+                    showSuccess(`Ready! Loaded in ${loadTime}ms`);
+                    
+                    // Hide success message after 3 seconds
+                    setTimeout(hideSuccess, 3000);
+                },
+                
+                onError: function(error) {
+                    console.error("Error loading Swiss Ephemeris:", error);
+                    hideLoading();
+                    showError("Failed to load Swiss Ephemeris module. Please restart the app.");
+                },
+                
+                setStatus: function(text) {
+                    if (text && text.includes('Downloading')) {
+                        showLoading(text);
+                    }
+                }
+            };
+        }
+        
+        // Form submission
+        document.getElementById('calculatorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!moduleLoaded) {
+                showError("Swiss Ephemeris module not loaded yet. Please wait...");
+                return;
+            }
+            
+            const validation = validateInput();
+            if (validation.error) {
+                showError(validation.message);
+                return;
+            }
+            
+            showLoading('Calculating planetary positions...');
+            performCalculation();
+        });
+        
+        function validateInput() {
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            
+            // Date validation
+            const selectedDate = new Date(date);
+            const year = selectedDate.getFullYear();
+            if (year < 1800 || year > 2400) {
+                return { error: true, message: 'Date must be between 1800 and 2400' };
+            }
+            
+            // Time validation
+            if (!time) {
+                return { error: true, message: 'Please enter a valid time' };
+            }
+            
+            // Coordinate validation
+            const lonDeg = parseInt(document.getElementById('lonDeg').value);
+            const lonMin = parseInt(document.getElementById('lonMin').value);
+            const lonSec = parseInt(document.getElementById('lonSec').value);
+            
+            if (isNaN(lonDeg) || lonDeg < 0 || lonDeg > 179 ||
+                isNaN(lonMin) || lonMin < 0 || lonMin > 59 ||
+                isNaN(lonSec) || lonSec < 0 || lonSec > 59) {
+                return { error: true, message: 'Invalid longitude values' };
+            }
+            
+            const latDeg = parseInt(document.getElementById('latDeg').value);
+            const latMin = parseInt(document.getElementById('latMin').value);
+            const latSec = parseInt(document.getElementById('latSec').value);
+            
+            if (isNaN(latDeg) || latDeg < 0 || latDeg > 89 ||
+                isNaN(latMin) || latMin < 0 || latMin > 59 ||
+                isNaN(latSec) || latSec < 0 || latSec > 59) {
+                return { error: true, message: 'Invalid latitude values' };
+            }
+            
+            return { error: false };
+        }
+        
+        function performCalculation() {
+            try {
+                const startTime = performance.now();
+                
+                // Get form values
+                const date = new Date(document.getElementById('date').value);
+                const time = document.getElementById('time').value;
+                const [hour, minute] = time.split(':').map(Number);
+                
+                const lonDeg = parseInt(document.getElementById('lonDeg').value);
+                const lonMin = parseInt(document.getElementById('lonMin').value);
+                const lonSec = parseInt(document.getElementById('lonSec').value);
+                const lonEW = document.getElementById('lonEW').value;
+                
+                const latDeg = parseInt(document.getElementById('latDeg').value);
+                const latMin = parseInt(document.getElementById('latMin').value);
+                const latSec = parseInt(document.getElementById('latSec').value);
+                const latNS = document.getElementById('latNS').value;
+                
+                const houseSystem = document.getElementById('houseSystem').value;
+                
+                // Call WebAssembly function
+                const result = window.Module.ccall(
+                    'get',
+                    'string',
+                    ['number', 'number', 'number', 'number', 'number', 'number',
+                     'number', 'number', 'number', 'string',
+                     'number', 'number', 'number', 'string', 'string'],
+                    [date.getFullYear(), date.getMonth() + 1, date.getDate(),
+                     hour, minute, 0,
+                     lonDeg, lonMin, lonSec, lonEW,
+                     latDeg, latMin, latSec, latNS,
+                     houseSystem]
+                );
+                
+                const calcTime = performance.now() - startTime;
+                console.log(`Calculation completed in ${calcTime.toFixed(2)}ms`);
+                
+                // Parse and display results
+                const data = JSON.parse(result);
+                displayResults(data);
+                hideLoading();
+                showSuccess(`Calculation complete in ${calcTime.toFixed(0)}ms`);
+                
+            } catch (error) {
+                console.error('Calculation error:', error);
+                hideLoading();
+                showError('Calculation failed: ' + error.message);
+            }
+        }
+        
+        function displayResults(data) {
+            const resultsDiv = document.getElementById('results');
+            const tableDiv = document.getElementById('resultsTable');
+            
+            let html = '<table class="table">';
+            html += '<thead><tr><th>Planet</th><th>Longitude</th><th>Latitude</th><th>Distance</th><th>Speed</th></tr></thead>';
+            html += '<tbody>';
+            
+            // Planets
+            data.planets.forEach(planet => {
+                html += `<tr>
+                    <td>${planet.name}</td>
+                    <td>${planet.long_s}</td>
+                    <td>${planet.lat}</td>
+                    <td>${planet.distance}</td>
+                    <td>${planet.speed}</td>
+                </tr>`;
+            });
+            
+            html += '<tr><td colspan="5"></td></tr>';
+            
+            // Angles
+            data.ascmc.forEach(angle => {
+                html += `<tr>
+                    <td>${angle.name}</td>
+                    <td>${angle.long_s}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>`;
+            });
+            
+            html += '<tr><td colspan="5"></td></tr>';
+            
+            // Houses
+            data.house.forEach(house => {
+                html += `<tr>
+                    <td>House ${house.name}</td>
+                    <td>${house.long_s}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            
+            tableDiv.innerHTML = html;
+            resultsDiv.style.display = 'block';
+            
+            // Scroll to results
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function getCurrentLocation() {
+            if (typeof Android !== 'undefined') {
+                Android.getCurrentLocation();
+            } else {
+                showError('Location service not available');
+            }
+        }
+        
+        // Android interface functions
+        function onCalculationResult(result) {
+            try {
+                const data = JSON.parse(result);
+                displayResults(data);
+                hideLoading();
+                showSuccess('Calculation complete');
+            } catch (error) {
+                showError('Failed to parse calculation result');
+            }
+        }
+        
+        function onCalculationError(error) {
+            hideLoading();
+            showError('Calculation error: ' + error);
+        }
+        
+        // UI helper functions
+        function showLoading(message) {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loadingText').textContent = message;
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => errorDiv.style.display = 'none', 5000);
+        }
+        
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => successDiv.style.display = 'none', 3000);
+        }
+        
+        function hideSuccess() {
+            document.getElementById('successMessage').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
