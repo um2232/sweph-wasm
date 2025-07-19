@@ -1,0 +1,19 @@
+{
+  "name": "Sweph-Wasm",
+  "short_name": "Sweph-Wasm",
+  "description": "Swiss Ephemeris WebAssembly - Calculate planetary positions and astrological houses",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f9fa",
+  "theme_color": "#0d6efd",
+  "icons": [
+    {
+      "src": "assets/img/favicon.ico",
+      "sizes": "16x16 32x32",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["utilities", "astrology"],
+  "lang": "en",
+  "orientation": "portrait-primary"
+}
