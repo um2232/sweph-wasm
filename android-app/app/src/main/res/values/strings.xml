@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Planetary Calculator</string>
+    
+    <!-- Loading and Status -->
+    <string name="loading_calculator">Loading Calculator</string>
+    <string name="initializing">Initializing Swiss Ephemeris…</string>
+    <string name="calculating">Calculating planetary positions…</string>
+    <string name="ready">Ready for calculations</string>
+    
+    <!-- Error Messages -->
+    <string name="error_loading">Error Loading Calculator</string>
+    <string name="error_message">Failed to load the planetary calculator. Please check your internet connection and try again.</string>
+    <string name="error_webassembly">WebAssembly is not supported on this device</string>
+    <string name="error_location_permission">Location permission is required to use GPS coordinates</string>
+    
+    <!-- Buttons -->
+    <string name="retry">Retry</string>
+    <string name="calculate">Calculate</string>
+    <string name="use_current_location">Use Current Location</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    
+    <!-- Location -->
+    <string name="location_permission_title">Location Permission</string>
+    <string name="location_permission_message">Location permission allows the app to automatically fill in your current coordinates for calculations.</string>
+    <string name="location_updated">Location updated</string>
+    <string name="location_unavailable">Location unavailable</string>
+    
+    <!-- Calculator Fields -->
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="longitude">Longitude</string>
+    <string name="latitude">Latitude</string>
+    <string name="house_system">House System</string>
+    
+    <!-- House Systems -->
+    <string name="placidus">Placidus</string>
+    <string name="porphyrius">Porphyrius</string>
+    <string name="equal">Equal</string>
+    
+    <!-- Results -->
+    <string name="planetary_positions">Planetary Positions</string>
+    <string name="houses">Houses</string>
+    <string name="angles">Angles</string>
+    <string name="planet">Planet</string>
+    <string name="longitude_short">Long.</string>
+    <string name="latitude_short">Lat.</string>
+    <string name="distance">Distance</string>
+    <string name="speed">Speed</string>
+    
+    <!-- Planets -->
+    <string name="sun">Sun</string>
+    <string name="moon">Moon</string>
+    <string name="mercury">Mercury</string>
+    <string name="venus">Venus</string>
+    <string name="mars">Mars</string>
+    <string name="jupiter">Jupiter</string>
+    <string name="saturn">Saturn</string>
+    <string name="uranus">Uranus</string>
+    <string name="neptune">Neptune</string>
+    <string name="pluto">Pluto</string>
+    <string name="ascendant">Ascendant</string>
+    <string name="midheaven">Midheaven</string>
+    
+    <!-- Validation -->
+    <string name="invalid_date">Invalid date. Please select a date between 1800 and 2400.</string>
+    <string name="invalid_time">Invalid time format</string>
+    <string name="invalid_longitude">Invalid longitude. Please enter values between 0-179 degrees, 0-59 minutes, 0-59 seconds.</string>
+    <string name="invalid_latitude">Invalid latitude. Please enter values between 0-89 degrees, 0-59 minutes, 0-59 seconds.</string>
+    
+    <!-- Menu -->
+    <string name="menu_about">About</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_help">Help</string>
+    
+    <!-- About -->
+    <string name="about_title">About Planetary Calculator</string>
+    <string name="about_description">High-precision astrological calculations using Swiss Ephemeris. Works completely offline.</string>
+    <string name="about_version">Version 1.0.0</string>
+    <string name="about_credits">Based on Swiss Ephemeris © Astrodienst AG</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_auto_location">Auto-detect location</string>
+    <string name="settings_auto_location_summary">Automatically fill coordinates from GPS</string>
+    <string name="settings_dark_theme">Dark theme</string>
+    <string name="settings_dark_theme_summary">Use dark theme for better visibility</string>
+    <string name="settings_clear_cache">Clear cache</string>
+    <string name="settings_clear_cache_summary">Clear cached ephemeris data</string>
+    
+    <!-- Help -->
+    <string name="help_title">Help</string>
+    <string name="help_how_to_use">How to Use</string>
+    <string name="help_how_to_use_content">1. Enter the date and time for your calculation\n2. Enter the longitude and latitude of the location\n3. Select a house system (Placidus is most common)\n4. Tap Calculate to get planetary positions</string>
+    <string name="help_date_range">Date Range</string>
+    <string name="help_date_range_content">The calculator supports dates from 1800 to 2400 AD with high precision.</string>
+    <string name="help_house_systems">House Systems</string>
+    <string name="help_house_systems_content">• Placidus: Most common house system\n• Porphyrius: Equal division of houses\n• Equal: Equal house system</string>
+    
+    <!-- Toast Messages -->
+    <string name="toast_calculation_complete">Calculation complete</string>
+    <string name="toast_location_updated">Location updated from GPS</string>
+    <string name="toast_cache_cleared">Cache cleared</string>
+    <string name="toast_settings_saved">Settings saved</string>
+</resources>
