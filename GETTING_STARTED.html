@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweph-Wasm - Getting Started</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #0d6efd;
+        }
+        .code {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .button {
+            background: #0d6efd;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 Sweph-Wasm - Getting Started</h1>
+    
+    <div class="warning">
+        <strong>⚠️ Important:</strong> You cannot open the application directly from the file system due to browser security restrictions. You must use a local web server.
+    </div>
+
+    <h2>📥 Step 1: Download</h2>
+    <div class="step">
+        <p>Download the Sweph-Wasm files to your computer. You can either:</p>
+        <ul>
+            <li>Download as ZIP from GitHub</li>
+            <li>Clone with Git: <span class="code">git clone [repository-url]</span></li>
+        </ul>
+        <p>Extract the files to a folder on your computer.</p>
+    </div>
+
+    <h2>🖥️ Step 2: Start Local Server</h2>
+    <div class="step">
+        <h3>Option A: Use the provided scripts (Easiest)</h3>
+        <p><strong>Windows:</strong> Double-click <code>start-server.bat</code></p>
+        <p><strong>Mac/Linux:</strong> Double-click <code>start-server.sh</code> or run in terminal:</p>
+        <div class="code">./start-server.sh</div>
+
+        <h3>Option B: Manual commands</h3>
+        <p><strong>Python 3:</strong></p>
+        <div class="code">python -m http.server 8000</div>
+        
+        <p><strong>Node.js:</strong></p>
+        <div class="code">npx http-server -p 8000</div>
+        
+        <p><strong>PHP:</strong></p>
+        <div class="code">php -S localhost:8000</div>
+    </div>
+
+    <h2>🌐 Step 3: Open Application</h2>
+    <div class="step">
+        <p>Once your server is running:</p>
+        <ol>
+            <li>Open your web browser</li>
+            <li>Go to: <strong>http://localhost:8000</strong></li>
+            <li>The application should load</li>
+        </ol>
+    </div>
+
+    <h2>📱 Step 4: Install for Offline Use (Optional)</h2>
+    <div class="step">
+        <p>To use the app offline:</p>
+        <ul>
+            <li><strong>Desktop:</strong> Look for install icon in address bar</li>
+            <li><strong>Mobile:</strong> Use "Add to Home Screen" option</li>
+        </ul>
+    </div>
+
+    <h2>🎯 Quick Test</h2>
+    <div class="step">
+        <p>Try this example calculation:</p>
+        <ul>
+            <li><strong>Date:</strong> 2024-01-15</li>
+            <li><strong>Time:</strong> 12:00</li>
+            <li><strong>Longitude:</strong> 9° 9' 34" E</li>
+            <li><strong>Latitude:</strong> 45° 27' 40" N</li>
+            <li><strong>House System:</strong> Placidus</li>
+        </ul>
+        <p>Click "Calculate" to see planetary positions!</p>
+    </div>
+
+    <div class="success">
+        <h3>✅ You're Ready!</h3>
+        <p>The application is now ready for astrological calculations. All data is processed locally - no internet required after initial load.</p>
+    </div>
+
+    <h2>🔧 Troubleshooting</h2>
+    <div class="step">
+        <p><strong>Can't access localhost:8000?</strong></p>
+        <ul>
+            <li>Make sure the server is running (you should see output in the terminal)</li>
+            <li>Try a different port: <span class="code">python -m http.server 8080</span></li>
+            <li>Check if another application is using port 8000</li>
+        </ul>
+
+        <p><strong>Getting CORS errors?</strong></p>
+        <ul>
+            <li>Don't open index.html directly in browser</li>
+            <li>Always use a local web server</li>
+        </ul>
+
+        <p><strong>Calculations not working?</strong></p>
+        <ul>
+            <li>Check that date is between 1800-2400</li>
+            <li>Verify coordinates are valid</li>
+            <li>Ensure all fields are filled</li>
+        </ul>
+    </div>
+
+    <h2>📚 More Information</h2>
+    <div class="step">
+        <p>For detailed instructions, see:</p>
+        <ul>
+            <li><a href="DOWNLOAD_GUIDE.md" class="button">Download Guide</a></li>
+            <li><a href="OFFLINE_README.md" class="button">Offline Features</a></li>
+            <li><a href="README.md" class="button">Technical Details</a></li>
+        </ul>
+    </div>
+
+    <hr>
+    <p><em>Sweph-Wasm - Swiss Ephemeris WebAssembly Application</em></p>
+</body>
+</html>
