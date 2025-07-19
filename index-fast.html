@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sweph-Wasm - Fast Loading Version">
+  <meta name="author" content="u-blusky">
+  <meta name="generator" content="">
+  <meta name="theme-color" content="#0d6efd">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Sweph-Wasm">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Sweph-Wasm">
+  <title>Sweph-Wasm - Fast Loading</title>
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
+
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    .myDivLonLat {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+    }
+
+    .myPadding {
+      padding: .375rem .75rem !important;
+    }
+
+    .myTable {
+      padding: 0 !important;
+      margin: 0 !important;
+      width: 100%;
+    }
+
+    .myTable th:first-of-type {
+      text-align: right;
+    }
+
+    .myTable th {
+      text-align: center;
+      padding-right: 40px;
+    }
+
+    .myTable td {
+      text-align: right;
+      padding-right: 40px;
+    }
+    
+    /* Enhanced loading indicator */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #0d6efd;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Progress bar */
+    .progress-container {
+      width: 100%;
+      max-width: 300px;
+      margin: 10px auto;
+      background-color: #f0f0f0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 6px;
+      background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+      width: 0%;
+      transition: width 0.3s ease;
+      border-radius: 10px;
+    }
+    
+    /* Success message */
+    .success-message {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px 0;
+      display: none;
+    }
+    
+    /* Performance indicator */
+    .performance-indicator {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      z-index: 1000;
+    }
+    
+    /* Optimized button states */
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    /* Fast loading animations */
+    .fade-in {
+      animation: fadeIn 0.3s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+
+</head>
+
+<body class="bg-light">
+  <!-- Performance indicator -->
+  <div id="performanceIndicator" class="performance-indicator">
+    Loading...
+  </div>
+  
+  <div class="container">
+    <main>
+      <div class="text-center" style="margin:50px auto;max-width:700px;">
+        <h2>Sweph-Wasm - Fast Loading</h2>
+        <p class="lead">Optimized for lightning-fast loading and calculations!</p>
+        
+        <!-- Success message -->
+        <div id="successMessage" class="success-message">
+          <strong>✅ Ready!</strong> The application is loaded and ready for calculations.
+        </div>
+      </div>
+
+      <div class="row g-5" style="margin:0 auto;max-width:700px;">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:0;">
+          <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-primary">Input data</span>
+          </h4>
+          <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <div class="col-sm-5">
+                <h6 class="my-0">Date</h6>
+                <small class="text-muted">Range years 1800 - 2400</small>
+              </div>
+              <div class="col-sm-7">
+                <input type="date" id="initDate" class="form-control" min="1800-01-01" max="2040-12-31"
+                  pattern="\d{4}-\d{2}-\d{2}" required />
+              </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <div class="col-sm-5">
+                <h6 class="my-0">Time</h6>
+                <small class="text-muted">Time in UT (Universal Time)</small>
+              </div>
+              <div class="col-sm-7">
+                <input type="time" id="initTime" class="form-control" required />
+              </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <div class="col-sm-5">
+                <h6 class="my-0">Longitude</h6>
+                <small class="text-muted">For Calculate houses</small>
+              </div>
+              <div class="col-sm-7">
+                <div class="myDivLonLat">
+                  <div style="width: 60px;margin-right:5px;">
+                    <input type="text" id="lonG" class="form-control myPadding"
+                      oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"
+                      required />
+                  </div>
+                  <div style="width: 10px;">°</div>
+                  <div style="width: 50px;margin-right:5px;">
+                    <input type="text" id="lonM" class="form-control myPadding"
+                      oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"
+                      required />
+                  </div>
+                  <div style="width: 10px;margin-right:5px;">'</div>
+                  <div style="width: 50px;">
+                    <input type="text" id="lonS" class="form-control myPadding"
+                      oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"
+                      required />
+                  </div>
+                  <div style="width: 10px;">"</div>
+                  <select class="form-select myPadding" id="lonEW" style="margin-left:5px;width:90px;" required>
+                    <option value="E">E</option>
+                    <option value="W">W</option>
+                  </select>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <div class="col-sm-5">
+                <h6 class="my-0">Latitude</h6>
+                <small class="text-muted">For calculate houses</small>
+              </div>
+              <div class="col-sm-7">
+                <div class="myDivLonLat">
+                  <div style="width: 60px;margin-right:5px;">
+                    <input type="text" id="latG" class="form-control myPadding"
+                      oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"
+                      required />
+                  </div>
+                  <div style="width: 10px;">°</div>
+                  <div style="width: 50px;margin-right:5px;">
+                    <input type="text" id="latM" class="form-control myPadding"
+                      oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"
+                      required />
+                  </div>
+                  <div style="width: 10px;margin-right:5px;">'</div>
+                  <div style="width: 50px;">
+                    <input type="text" id="latS" class="form-control myPadding"
+                      oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"
+                      required />
+                  </div>
+                  <div style="width: 10px;">"</div>
+
+                  <select class="form-select myPadding" id="latNS" style="margin-left:5px;width:90px;" required>
+                    <option value="N">N</option>
+                    <option value="S">S</option>
+                  </select>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <div class="col-sm-5">
+                <h6 class="my-0">House System</h6>
+                <small class="text-muted">For calculate houses</small>
+              </div>
+              <div class="col-sm-7">
+                <select class="form-select myPadding" id="houseSystem" style="margin-left:5px;" required>
+                  <option value="P">Placidus</option>
+                  <option value="O">Porphyrius</option>
+                  <option value="E">Equal</option>
+                </select>
+              </div>
+            </li>
+          </ul>
+
+          <button type="button" id="btnCalculate" class="btn btn-secondary"
+            style="width:200px;float:right;">Calculate</button>
+        </div>
+        
+        <!-- Enhanced loading indicator -->
+        <div id="loadingDiv" class="loading">
+          <div class="spinner"></div>
+          <p id="loadingMessage">Initializing...</p>
+          <div class="progress-container">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+        </div>
+        
+        <div id="resultDiv" class="col-xs-12 col-sm-12 col-md-12 col-lg-12"
+          style="white-space:pre;font-family: monospace;font-size: 14px;padding: 0;">
+        </div>
+      </div>
+    </main>
+
+    <footer class="my-5 pt-5 text-muted text-center text-small">
+      <p class="mb-1">Sweph-Wasm based on <a href="https://www.astro.com/swisseph/swephinfo_e.htm?"
+          target="_blank">&copy;Swiss Ephemeris</a></p>
+      <p class="mb-1"><strong>Fast Loading Version</strong> - Optimized for speed</p>
+    </footer>
+  </div>
+
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Sweph-Wasm</strong>
+        <small>Oops! Check the data</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div id="toastbody" class="toast-body"></div>
+    </div>
+  </div>
+
+  <!-- Preload critical resources -->
+  <link rel="preload" href="js/astro.data" as="fetch" crossorigin>
+  <link rel="preload" href="js/astro.wasm" as="fetch" crossorigin>
+
+  <script type="text/javascript" src="assets/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript" src="assets/js/jquery-3.6.4.min.js"></script>
+  <script type="text/javascript" src="assets/js/moment.min.js"></script>
+  
+  <!-- Load the WebAssembly module directly -->
+  <script type="text/javascript" src="js/astro.js"></script>
+  
+  <script type="text/javascript" src="js/calculate-fast.js"></script>
+
+</body>
+
+</html>
