@@ -49,8 +49,8 @@ class MainActivity : AppCompatActivity() {
         binding.webView.settings.builtInZoomControls = true
         binding.webView.settings.displayZoomControls = false
         
-        // Load the calculator HTML
-        binding.webView.loadUrl("file:///android_asset/calculator.html")
+        // Load the Vedic calculator HTML
+        binding.webView.loadUrl("file:///android_asset/vedic-calculator.html")
         
         // Handle JavaScript interface
         binding.webView.addJavascriptInterface(WebAppInterface(), "Android")

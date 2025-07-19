@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#FF6B35">
+    <title>Vedic Astrology Calculator</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            min-height: 100vh;
+            padding: 16px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #FF6B35, #F7931E);
+            color: white;
+            padding: 32px 24px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+            line-height: 1.4;
+        }
+        
+        .content {
+            padding: 32px 24px;
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .form-section h3 {
+            color: #FF6B35;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #FF6B35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+        
+        .row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .col {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .coord-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 4px;
+        }
+        
+        .coord-input input {
+            flex: 1;
+            text-align: center;
+            border: none;
+            padding: 10px 8px;
+            font-size: 16px;
+            background: transparent;
+        }
+        
+        .coord-input input:focus {
+            outline: none;
+        }
+        
+        .coord-input span {
+            font-weight: 600;
+            color: #666;
+            padding: 0 8px;
+        }
+        
+        .select-wrapper {
+            position: relative;
+        }
+        
+        .select-wrapper select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            appearance: none;
+            cursor: pointer;
+        }
+        
+        .select-wrapper::after {
+            content: '▼';
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            pointer-events: none;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #FF6B35, #F7931E);
+            color: white;
+            border: none;
+            padding: 18px 32px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 32px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #FF6B35;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results {
+            margin-top: 32px;
+            display: none;
+        }
+        
+        .results h3 {
+            color: #FF6B35;
+            margin-bottom: 20px;
+            font-size: 22px;
+            font-weight: 700;
+        }
+        
+        .results-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .results-section h4 {
+            color: #333;
+            margin-bottom: 16px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .table th {
+            background: linear-gradient(135deg, #FF6B35, #F7931E);
+            color: white;
+            padding: 16px 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .table td {
+            padding: 14px 12px;
+            text-align: center;
+            font-size: 14px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .planet-name {
+            font-weight: 600;
+            color: #FF6B35;
+        }
+        
+        .rashi-info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 8px;
+        }
+        
+        .rashi-info h5 {
+            color: #1976d2;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 16px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+            border-left: 4px solid #c62828;
+        }
+        
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 16px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+            border-left: 4px solid #2e7d32;
+        }
+        
+        .info-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 16px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .info-box h5 {
+            color: #e65100;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .info-box p {
+            color: #bf360c;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 600px) {
+            .row {
+                flex-direction: column;
+            }
+            
+            .coord-input {
+                flex-wrap: wrap;
+            }
+            
+            .table {
+                font-size: 12px;
+            }
+            
+            .table th,
+            .table td {
+                padding: 8px 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🪐 Vedic Astrology Calculator</h1>
+            <p>Calculate planetary positions using Surya Siddhanta & Lahiri Ayanamsa</p>
+        </div>
+        
+        <div class="content">
+            <div class="info-box">
+                <h5>📚 Vedic Astrology Features</h5>
+                <p>This calculator uses Surya Siddhanta calculations with Lahiri ayanamsa for accurate Vedic astrology computations. Includes all 9 Vedic planets (Navagrahas) and precise Lagna calculation.</p>
+            </div>
+            
+            <div class="form-section">
+                <h3>📅 Date & Time</h3>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="initDate">Date</label>
+                            <input type="date" id="initDate" class="form-control" min="1800-01-01" max="2400-12-31" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="initTime">Time (UT)</label>
+                            <input type="time" id="initTime" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>📍 Location Coordinates</h3>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Longitude</label>
+                            <div class="coord-input">
+                                <input type="number" id="lonG" placeholder="°" min="0" max="179" required>
+                                <span>°</span>
+                                <input type="number" id="lonM" placeholder="'" min="0" max="59" required>
+                                <span>'</span>
+                                <input type="number" id="lonS" placeholder="&quot;" min="0" max="59" required>
+                                <span>"</span>
+                                <select id="lonEW" class="form-control" style="width: 60px; border: none; background: transparent;">
+                                    <option value="E">E</option>
+                                    <option value="W">W</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Latitude</label>
+                            <div class="coord-input">
+                                <input type="number" id="latG" placeholder="°" min="0" max="89" required>
+                                <span>°</span>
+                                <input type="number" id="latM" placeholder="'" min="0" max="59" required>
+                                <span>'</span>
+                                <input type="number" id="latS" placeholder="&quot;" min="0" max="59" required>
+                                <span>"</span>
+                                <select id="latNS" class="form-control" style="width: 60px; border: none; background: transparent;">
+                                    <option value="N">N</option>
+                                    <option value="S">S</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="houseSystem">House System</label>
+                            <div class="select-wrapper">
+                                <select id="houseSystem" class="form-control" required>
+                                    <option value="P">Placidus (Most Popular)</option>
+                                    <option value="K">Koch</option>
+                                    <option value="O">Porphyrius</option>
+                                    <option value="R">Regiomontanus</option>
+                                    <option value="C">Campanus</option>
+                                    <option value="A">Equal (Whole Sign)</option>
+                                    <option value="E">Equal (Equal House)</option>
+                                    <option value="V">Vehlow</option>
+                                    <option value="X">Axial Rotation</option>
+                                    <option value="H">Horizontal</option>
+                                    <option value="T">Topocentric</option>
+                                    <option value="B">Alcabitus</option>
+                                    <option value="M">Morinus</option>
+                                    <option value="W">Whole Sign</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="ayanamsa">Ayanamsa</label>
+                            <div class="select-wrapper">
+                                <select id="ayanamsa" class="form-control" required>
+                                    <option value="1">Lahiri (Most Popular)</option>
+                                    <option value="0">Fagan/Bradley</option>
+                                    <option value="3">Raman</option>
+                                    <option value="5">Krishnamurti</option>
+                                    <option value="6">Yukteshwar</option>
+                                    <option value="7">JN Bhasin</option>
+                                    <option value="8">Babylonian/Kugler 1</option>
+                                    <option value="9">Babylonian/Kugler 2</option>
+                                    <option value="10">Babylonian/Kugler 3</option>
+                                    <option value="11">Babylonian/Huber</option>
+                                    <option value="12">Babylonian/Eta Piscium</option>
+                                    <option value="13">Babylonian/Aldebaran 15Tau</option>
+                                    <option value="14">Hipparchos</option>
+                                    <option value="15">Sassanian</option>
+                                    <option value="16">Galactic Center 0Sag</option>
+                                    <option value="17">J2000</option>
+                                    <option value="18">J1900</option>
+                                    <option value="19">B1950</option>
+                                    <option value="20">Suryasiddhanta</option>
+                                    <option value="21">Suryasiddhanta (Mean Sun)</option>
+                                    <option value="22">Aryabhata</option>
+                                    <option value="23">Aryabhata (Mean Sun)</option>
+                                    <option value="24">SS Revati</option>
+                                    <option value="25">SS Citra</option>
+                                    <option value="26">True Citra</option>
+                                    <option value="27">True Revati</option>
+                                    <option value="28">True Pushya</option>
+                                    <option value="29">Galactic Center (Gil Brand)</option>
+                                    <option value="30">Galactic Equator (IAU1958)</option>
+                                    <option value="31">Galactic Equator (True)</option>
+                                    <option value="32">Galactic Equator (Mula)</option>
+                                    <option value="33">Skydram (Mardyks)</option>
+                                    <option value="34">True Mula (Chandra Hari)</option>
+                                    <option value="35">Dhruva/Galactic Center (Makara)</option>
+                                    <option value="36">Vedic/Sidereal</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="button" id="btnCalculate" class="btn">
+                🧮 Calculate Vedic Chart
+            </button>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Calculating planetary positions...</p>
+            </div>
+            
+            <div class="error" id="error"></div>
+            <div class="success" id="success"></div>
+            
+            <div class="results" id="results">
+                <div class="results-section">
+                    <h4>🌞 Planetary Positions (Vedic)</h4>
+                    <div id="planetsTable"></div>
+                </div>
+                
+                <div class="results-section">
+                    <h4>🏠 Houses & Lagna</h4>
+                    <div id="housesTable"></div>
+                </div>
+                
+                <div class="results-section">
+                    <h4>📊 Chart Summary</h4>
+                    <div id="chartSummary"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Swiss Ephemeris WebAssembly -->
+    <script src="js/astro.js"></script>
+    <script src="js/vedic-calculator.js"></script>
+
+    <script>
+        // Initialize form with current date/time and default coordinates
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            document.getElementById('initDate').value = now.toISOString().split('T')[0];
+            document.getElementById('initTime').value = now.toTimeString().slice(0, 5);
+            
+            // Default coordinates (Mumbai, India)
+            document.getElementById('lonG').value = '72';
+            document.getElementById('lonM').value = '50';
+            document.getElementById('lonS').value = '0';
+            document.getElementById('latG').value = '19';
+            document.getElementById('latM').value = '4';
+            document.getElementById('latS').value = '0';
+        });
+        
+        // Calculate button click handler
+        document.getElementById('btnCalculate').addEventListener('click', function() {
+            calculateVedicChart();
+        });
+        
+        function calculateVedicChart() {
+            // Validate input
+            const validation = validateInput();
+            if (validation.error) {
+                showError(validation.message);
+                return;
+            }
+            
+            // Show loading
+            showLoading(true);
+            hideResults();
+            
+            // Get form data
+            const formData = getFormData();
+            
+                    // Initialize Vedic Calculator
+        if (!window.vedicCalculator) {
+            window.vedicCalculator = new VedicCalculator();
+        }
+        
+        // Perform actual Vedic calculation
+        window.vedicCalculator.calculateVedicChart(formData)
+            .then(result => {
+                displayResults(result);
+                showLoading(false);
+            })
+            .catch(error => {
+                console.error('Calculation error:', error);
+                showError('Calculation failed: ' + error.message);
+                showLoading(false);
+            });
+        }
+        
+        function validateInput() {
+            const date = document.getElementById('initDate').value;
+            const time = document.getElementById('initTime').value;
+            
+            if (!date || !time) {
+                return { error: true, message: 'Please enter both date and time.' };
+            }
+            
+            const selectedDate = new Date(date + 'T' + time);
+            const year = selectedDate.getFullYear();
+            
+            if (year < 1800 || year > 2400) {
+                return { error: true, message: 'Date must be between 1800 and 2400.' };
+            }
+            
+            return { error: false };
+        }
+        
+        function getFormData() {
+            const date = document.getElementById('initDate').value;
+            const time = document.getElementById('initTime').value;
+            const lonG = parseInt(document.getElementById('lonG').value);
+            const lonM = parseInt(document.getElementById('lonM').value);
+            const lonS = parseInt(document.getElementById('lonS').value);
+            const lonEW = document.getElementById('lonEW').value;
+            const latG = parseInt(document.getElementById('latG').value);
+            const latM = parseInt(document.getElementById('latM').value);
+            const latS = parseInt(document.getElementById('latS').value);
+            const latNS = document.getElementById('latNS').value;
+            const houseSystem = document.getElementById('houseSystem').value;
+            const ayanamsa = document.getElementById('ayanamsa').value;
+            
+            return {
+                date, time, lonG, lonM, lonS, lonEW, latG, latM, latS, latNS, houseSystem, ayanamsa
+            };
+        }
+        
+
+        
+        function displayResults(result) {
+            // Display planets
+            let planetsHtml = '<table class="table"><thead><tr><th>Planet</th><th>Longitude</th><th>Rashi</th><th>Nakshatra</th><th>Latitude</th><th>Speed</th></tr></thead><tbody>';
+            
+            result.planets.forEach(planet => {
+                planetsHtml += `<tr>
+                    <td class="planet-name">${planet.name}</td>
+                    <td>${planet.formattedLongitude}</td>
+                    <td>${planet.rashi}</td>
+                    <td>${planet.nakshatra}</td>
+                    <td>${planet.latitude.toFixed(2)}°</td>
+                    <td>${planet.speed.toFixed(2)}°/day</td>
+                </tr>`;
+            });
+            
+            planetsHtml += '</tbody></table>';
+            document.getElementById('planetsTable').innerHTML = planetsHtml;
+            
+            // Display houses
+            let housesHtml = '<table class="table"><thead><tr><th>House</th><th>Longitude</th><th>Rashi</th></tr></thead><tbody>';
+            
+            result.houses.forEach(house => {
+                housesHtml += `<tr>
+                    <td class="planet-name">${house.name}</td>
+                    <td>${house.formattedLongitude}</td>
+                    <td>${house.rashi}</td>
+                </tr>`;
+            });
+            
+            housesHtml += '</tbody></table>';
+            document.getElementById('housesTable').innerHTML = housesHtml;
+            
+            // Display chart summary
+            const lagnaRashi = result.lagna.rashi;
+            const lagnaLong = result.lagna.formattedLongitude;
+            
+            let summaryHtml = `
+                <div class="rashi-info">
+                    <h5>🎯 Lagna (Ascendant)</h5>
+                    <p><strong>Rashi:</strong> ${lagnaRashi} | <strong>Longitude:</strong> ${lagnaLong}</p>
+                </div>
+                <div class="rashi-info">
+                    <h5>📐 Calculation Details</h5>
+                    <p><strong>Ayanamsa:</strong> ${result.ayanamsa} | <strong>House System:</strong> ${result.houseSystem}</p>
+                    <p><strong>Method:</strong> Surya Siddhanta with Swiss Ephemeris</p>
+                    <p><strong>Date:</strong> ${result.date} ${result.time} UT | <strong>Location:</strong> ${result.latitude.toFixed(4)}°, ${result.longitude.toFixed(4)}°</p>
+                </div>
+            `;
+            
+            document.getElementById('chartSummary').innerHTML = summaryHtml;
+            
+            showResults();
+            showSuccess('Vedic chart calculated successfully!');
+        }
+        
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.getElementById('btnCalculate').disabled = show;
+        }
+        
+        function showResults() {
+            document.getElementById('results').style.display = 'block';
+        }
+        
+        function hideResults() {
+            document.getElementById('results').style.display = 'none';
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Location detection (if available through Android interface)
+        if (typeof Android !== 'undefined') {
+            // Add location detection button
+            const locationBtn = document.createElement('button');
+            locationBtn.textContent = '📍 Use Current Location';
+            locationBtn.className = 'btn';
+            locationBtn.style.marginTop = '16px';
+            locationBtn.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+            locationBtn.onclick = function() {
+                Android.getCurrentLocation();
+            };
+            document.querySelector('.form-section:last-child').appendChild(locationBtn);
+        }
+    </script>
+</body>
+</html>
